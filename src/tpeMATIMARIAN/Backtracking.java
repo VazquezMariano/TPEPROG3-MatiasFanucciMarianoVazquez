@@ -15,25 +15,31 @@ public class Backtracking {
 	public Resultado backtrackingOptimo(int objetivo, List<Maquina> maq) {
 		Collections.sort(maq);
 		Resultado resultado = new Resultado();
-	    backtracking(objetivo, maq, new ArrayList<>(), 0, resultado);
+	    backtracking(0,objetivo, maq, new ArrayList<>(), 0, resultado);
 	    return resultado;
 	}
 
-	public static void backtracking(int objetivo, List<Maquina> maquinas, List<Maquina> actual, int sumaActual, Resultado resultado) {
+	public static void backtracking(int indice, int objetivo, List<Maquina> maquinas, List<Maquina> actual, int sumaActual, Resultado resultado) {
 	    resultado.llamadas++;
 	    if (sumaActual > objetivo) return;
 
 	    if (sumaActual == objetivo) {
-	        if (resultado.secuencia.isEmpty() || actual.size() < resultado.secuencia.size()) {
-	            resultado.secuencia = new ArrayList<>(actual);
-	        }
-	        return;
+	    	resultado.secuencia = new ArrayList<>(actual);
+	    } else {
+		    for(int i = indice; i < maquinas.size(); i++) {
+			    if((sumaActual + maquinas.get(i).getPiezas()) < objetivo) {
+			    	actual.add(maquinas.get(i));
+			    	sumaActual = sumaActual + maquinas.get(i).getPiezas();
+			        if (resultado.secuencia.isEmpty() || actual.size() < resultado.secuencia.size()) {
+				    	backtracking(indice, objetivo, maquinas, actual, sumaActual, resultado);
+				    	actual.remove(actual.size() - 1);
+			        }
+			    }
+		    }
 	    }
 
-	    for (Maquina m : maquinas) {
-	        actual.add(m);
-	        backtracking(objetivo, maquinas, actual, sumaActual + m.getPiezas(), resultado);
-	        actual.remove(actual.size() - 1);
-	    }
+
+	    
+	   
 	}
 }
