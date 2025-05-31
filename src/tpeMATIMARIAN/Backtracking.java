@@ -20,20 +20,22 @@ public class Backtracking {
 	}
 
 	public static void backtracking(int indice, int objetivo, List<Maquina> maquinas, List<Maquina> actual, int sumaActual, Resultado resultado) {
-	    resultado.llamadas++;
-	    if (sumaActual > objetivo) return;
+
 
 	    if (sumaActual == objetivo) {
-	    	resultado.secuencia = new ArrayList<>(actual);
+			if (resultado.secuencia.isEmpty() || actual.size() < resultado.secuencia.size()) {
+				resultado.secuencia.clear();
+				resultado.secuencia.addAll(actual);
+			}
+	    	//resultado.secuencia = new ArrayList<>(actual);
 	    } else {
 		    for(int i = indice; i < maquinas.size(); i++) {
-			    if((sumaActual + maquinas.get(i).getPiezas()) < objetivo) {
+			    if((sumaActual + maquinas.get(i).getPiezas()) <= objetivo) {
 			    	actual.add(maquinas.get(i));
 			    	sumaActual = sumaActual + maquinas.get(i).getPiezas();
-			        if (resultado.secuencia.isEmpty() || actual.size() < resultado.secuencia.size()) {
-				    	backtracking(indice, objetivo, maquinas, actual, sumaActual, resultado);
-				    	actual.remove(actual.size() - 1);
-			        }
+					backtracking(indice, objetivo, maquinas, actual, sumaActual, resultado);
+					actual.remove(actual.size() - 1);
+					sumaActual= sumaActual - maquinas.get(i).getPiezas();
 			    }
 		    }
 	    }
